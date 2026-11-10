@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CGPRC | Clinical Psychologist & Mental Wellness Clinic</title>
+<title>Psychologist & Mental Wellness </title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="top"><div class="w"><div><span>✉ <b id="tem"></b></span><span>📞 <b id="tph"></b></span></div>
+<div class="top"><div class="w"><div><span>✉ <b id="tem"></b></span><span>📞 <b id="tph"></b></span></div> <div><span style="color: aqua;">RCI Reg. No.- A16045</span></div>
 <div class="lg2"><button id="l_en">EN</button> <button id="l_hi">हिं</button><a class="adm" href="#admin" ></a></div></div></div>
 <header><nav><a class="logo" href="#home"><i>✚</i>CGPRC</a><button id="mb" aria-label="menu">☰</button>
 <ul id="nv"><li><a href="#home" data-t="n_home"></a></li><li><a href="#about" data-t="n_about"></a></li><li><a href="#services" data-t="n_serv"></a></li><li><a href="#experts" data-t="n_exp"></a></li><li><a href="#book" data-t="n_book"></a></li><li><a href="#updates" data-t="n_upd"></a></li><li><a href="#faq" data-t="n_faq"></a></li><li><a href="#contact" data-t="n_con"></a></li></ul></nav></header>
@@ -92,13 +92,20 @@
 <script>
 const CFG={API:"",ADMIN_PASS:"cgprc@123"}; // paste Apps Script /exec URL in API for live multi-device mode
 const SLOTS=["10:30 AM - 11:20 AM","12:00 PM - 12:50 PM","03:00 PM - 03:50 PM","05:30 PM - 06:20 PM","06:30 PM - 07:20 PM"];
-const DEF={fee:"500",upi:"9471497422@ptsbi",payee:"CGPRC",phone:"",wa:"",email:"",hours:"Mon-Sat: 10:00 AM - 07:00 PM",addr:"Ara, Bihar"};
+const DEF={fee:"500",upi:"9471497422@ptsbi",payee:"CGPRC",phone:"+918340336728",wa:"+918340336728",email:"ssksociety@gmail.com",hours:"Mon-Sat: 5:00 PM - 07:00 PM",addr:"Chapra Kothi, Near Bajaj Show Room, (Muthoot Finance) Block Road Ara"};
 const T={en:{admin:"Admin",n_home:"Home",n_about:"About Us",n_serv:"Services",n_exp:"Our Experts",n_book:"Book Appointment",n_upd:"Updates",n_faq:"FAQ",n_con:"Contact Us",
 h_tag:"CGPRC · Mental Wellness Clinic",h_h1:"Healing begins when you feel heard.",h_p:"Confidential, evidence-based counselling and psychotherapy with Dr. Dhananjay Tiwari, Clinical Psychologist — in clinic and online.",h_book:"Book an Appointment",h_track:"Track Booking",bd1:"🛡 100% Confidential",bd2:"💬 Hindi & English",
 s1:"Confidential",s2b:"Online + Clinic",s2:"Sessions",s3b:"1-Click",s3:"Booking",
 a_t:"About Us",a_s:"A safe, non-judgemental space for your mind.",a_p1:"CGPRC is a mental wellness clinic offering professional psychological care for children, teens, adults and families. Every plan is personalised and every session is private.",a_p2:"Our approach combines Cognitive Behavioural Therapy, mindfulness and supportive counselling, so you build skills that last beyond the session room.",
 sv_t:"Services",sv_s:"Support for what you are going through.",sv1t:"Individual Counselling",sv1d:"One-to-one therapy for stress, low mood, trauma and self-esteem.",sv2t:"Anxiety & Depression",sv2d:"CBT-based treatment plans with practical tools for daily life.",sv3t:"Child & Teen Support",sv3d:"Learning, behaviour, exam stress and emotional development.",sv4t:"Couple & Family Therapy",sv4d:"Better communication and healthier relationships.",sv5t:"Career Counselling",sv5d:"Clarity on goals, burnout and decisions.",sv6t:"Online Session",sv6d:"Secure video consultations from anywhere.",
 ex_t:"Our Experts",ex_s:"Qualified professionals you can trust.",ex_n:"Dr. Dhananjay Tiwari, Ph.D.",ex_r:"Clinical Psychologist",ex_d:"Specialises in anxiety, depression, relationship concerns and stress management. Sessions available in Hindi and English.",ex_b:"Book with Dr. Tiwari",
+// {
+//     name: "Dr. Rukmini Shrivastava",
+//     qualification: "Clinical Psychologist",
+//     Address: Govt. Medical College, Shivpuri, MP.
+//     photo: "1st.jpeg"
+// }
+
 st_t:"How Booking Works",stp1:"Fill details",stp1d:"Choose service, date and time slot.",stp2:"Pay via UPI",stp2d:"Scan the QR and note the transaction number.",stp3:"Get confirmed",stp3d:"Admin verifies and approves your booking.",
 b_t:"Book an Appointment",b_s:"Fill details → pay via UPI → enter transaction number. Your booking is confirmed only after admin approval.",l_name:"Full name *",l_mob:"Mobile (WhatsApp) *",l_age:"Age *",l_serv:"Service *",l_date:"Date *",l_slot:"Time slot *",l_con:"Your concern (optional)",b_next:"Continue to Payment →",
 p_s1:"<b>Step 1:</b> Scan the QR with any UPI app and pay",p_upi:"UPI ID:",p_copy:"Copy",p_copied:"Copied",p_app:"Pay with UPI app (mobile)",p_utr:"<b>Step 2:</b> Transaction / UTR number * (12 digits)",p_err:"Transaction number must be 12 digits",
@@ -155,8 +162,8 @@ function ap(){document.documentElement.lang=L;
 function setL(l){L=l;localStorage.setItem("cl",l);ap()}
 $("l_en").onclick=()=>setL("en");$("l_hi").onclick=()=>setL("hi");
 function rc(){$("tem").innerHTML=S.email?`<a href="mailto:${E(S.email)}">${E(S.email)}</a>`:"info@yourclinic.com";
- $("tph").innerHTML=S.phone?`<a href="tel:${E(S.phone)}">${E(S.phone)}</a>`:"+91 XXXXX XXXXX";
- $("ct").innerHTML=`<div class="card"><div class="ic">📍</div><h3>${tr("c_addr")}</h3>${E(S.addr)}<br><a href="https://maps.google.com/?q=${encodeURIComponent(S.addr)}" target="_blank" rel="noopener">${tr("c_map")}</a></div>
+ $("tph").innerHTML=S.phone?`<a href="tel:${E(S.phone)}">${E(S.phone)}</a>`:"+918340336728";
+ $("ct").innerHTML=`<div class="card"><div class="ic">📍</div><h3>${tr("c_addr")}</h3>${E(S.addr)}<br><a href="https://share.google/FhSbWJvCflEdjmIHJ" target="_blank" rel="noopener">${tr("c_map")}</a></div>
  <div class="card"><div class="ic">🕘</div><h3>${tr("c_time")}</h3>${E(S.hours)}</div>
  <div class="card"><div class="ic">📞</div><h3>${tr("c_reach")}</h3>${S.phone?`${tr("c_call")} <a href="tel:${E(S.phone)}">${E(S.phone)}</a><br>`:""}${S.wa?`<a href="https://wa.me/${E(S.wa)}" target="_blank" rel="noopener">${tr("c_wa")}</a><br>`:""}${S.email?`<a href="mailto:${E(S.email)}">${E(S.email)}</a>`:""}${!S.phone&&!S.wa&&!S.email?tr("c_soon"):""}</div>`}
 function rn(){$("nl").innerHTML=NS.length?NS.map(n=>`<div class="ni">${E(n.text)}</div>`).join(""):`<p class="sub">${tr("u_none")}</p>`}
