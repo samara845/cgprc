@@ -14,11 +14,11 @@
 <p class="sub" style="margin-top:12px" data-t="h_p"></p>
 <a class="btn" href="#book" data-t="h_book"></a> <a class="btn o" href="#track" data-t="h_track"></a>
 <svg class="ecg" viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 23H110L125 23L135 6L150 40L162 12L172 23H400"/></svg></div>
-<div class="pic"><img src="doctor.jpg" alt="Dr. Dhananjay Tiwari"><span class="bd" style="left:-10px;bottom:30px" data-t="bd1"></span><span class="bd" style="right:-6px;top:24px" data-t="bd2"></span></div></div></section>
+<div class="pic"><img src="doctor.jpeg" alt="Dr. Dhananjay Tiwari"><span class="bd" style="left:-10px;bottom:30px" data-t="bd1"></span><span class="bd" style="right:-6px;top:24px" data-t="bd2"></span></div></div></section>
 
 <div class="band"><div class="w"><div><b>100%</b><span data-t="s1"></span></div><div><b data-t="s2b"></b><span data-t="s2"></span></div><div><b data-t="s3b"></b><span data-t="s3"></span></div></div></div>
 
-<section id="about"><div class="w g2 ab"><img src="doctor.jpg" alt="Dr. Dhananjay Tiwari"><div>
+<section id="about"><div class="w g2 ab"><img src="doctor.jpeg" alt="Dr. Dhananjay Tiwari"><div>
 <h2 data-t="a_t"></h2><p class="sub" data-t="a_s"></p><p data-t="a_p1"></p><p style="margin-top:10px" data-t="a_p2"></p></div></div></section>
 
 <section id="services" style="background:#fff"><div class="w"><h2 data-t="sv_t"></h2><p class="sub" data-t="sv_s"></p>
@@ -89,11 +89,11 @@
 
 <div id="ov"><div><h3 id="ovt"></h3><div class="bar"><i id="ovb"></i></div></div></div>
 <script>
-const CFG={API:"",ADMIN_PASS:"cgprc@123"}; // paste Apps Script /exec URL in API for live multi-device mode
+const CFG={API:"https://script.google.com/macros/s/AKfycbwrL0pHp5tb0A6Mdd052E8zhq_6ysj4MrmJn_QW-T0NVUiKNFN_W2BS_yuUfvGWo4do/exec",ADMIN_PASS:"cgprc@123"}; // paste Apps Script /exec URL in API for live multi-device mode
 const WS={wk:["03:00 PM - 03:45 PM","04:00 PM - 04:45 PM","05:00 PM - 05:45 PM","06:00 PM - 06:45 PM","07:00 PM - 07:45 PM","08:00 PM - 08:45 PM"],sat:["01:00 PM - 01:45 PM","02:00 PM - 02:45 PM","03:00 PM - 03:45 PM","04:00 PM - 04:45 PM","05:00 PM - 05:45 PM"],sun:["09:00 AM - 09:45 AM","10:00 AM - 10:45 AM","11:00 AM - 11:45 AM"]};
 const dayslots=d=>{const g=new Date(d+"T00:00:00").getDay();return g==0?WS.sun:g==6?WS.sat:WS.wk};
 const mins=x=>{const m=x.match(/(\d+):(\d+) (AM|PM)/);return(m[1]%12+(m[3]=="PM"?12:0))*60+ +m[2]};
-const DEFEX={id:"d1",name:"Dr. Dhananjay Tiwari, Ph.D.",role:"Clinical Psychologist",desc:"Specialises in anxiety, depression, relationship concerns and stress management.",photo:"doctor.jpg"};
+const DEFEX={id:"d1",name:"Dr. Dhananjay Tiwari, Ph.D.",role:"Clinical Psychologist",desc:"Specialises in anxiety, depression, relationship concerns and stress management.",photo:"doctor.jpeg"};
 const PH="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="170" height="200"><rect fill="#dbeafe" width="170" height="200"/><text x="85" y="120" font-size="70" text-anchor="middle">🩺</text></svg>');
 const DEF={fee:"500",upi:"9471497422@ptsbi",payee:"CGPRC",phone:"",wa:"",email:"",hours:"Mon-Fri: 3:00 PM - 8:45 PM | Sat: 1:00 PM - 5:45 PM | Sun: 9:00 AM - 11:45 AM",addr:"Ara, Bihar"};
 const T={en:{admin:"Admin",n_home:"Home",n_about:"About Us",n_serv:"Services",n_exp:"Our Experts",n_book:"Book Appointment",n_upd:"Updates",n_faq:"FAQ",n_con:"Contact Us",
