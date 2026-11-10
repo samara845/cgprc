@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wdev3238-sys.github.io/Doctors02/sitemap.xml
