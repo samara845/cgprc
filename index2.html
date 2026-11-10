@@ -1,0 +1,155 @@
+
+<link rel="stylesheet" href="style.css">
+<section id="admin" class=""><div class="w">
+<div id="lg" style="max-width:340px;margin:auto"><h2>Admin Login</h2><label>Password</label><input id="ap" type="password"><p style="margin-top:12px"><button class="btn" id="lb">Login</button></p><p id="le" class="er"></p></div>
+<div id="db" class="hide"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><h2>CGPRC Admin Dashboard</h2><div><button class="btn s o" id="rf">Refresh</button> <button class="btn s r" id="lo">Logout</button></div></div>
+<div class="cards" id="st" style="margin:16px 0"></div>
+<select id="fl" style="max-width:240px;margin-bottom:10px"><option value="">All bookings</option><option>Pending Verification</option><option>Confirmed</option><option>Rejected</option></select>
+<div class="tw"><table><thead><tr><th>ID</th><th>Patient</th><th>Service / Slot</th><th>UTR</th><th>Status</th><th>Action</th></tr></thead><tbody id="tbd"></tbody></table></div>
+<h3 style="margin:28px 0 8px">Notices</h3><div class="row"><input id="nt" placeholder="Write a notice"><button class="btn" id="na">Publish</button></div><div id="nm2" style="margin-top:10px"></div>
+<h3 style="margin:28px 0 8px">Our Experts</h3><div class="card"><div class="row"><div><label>Name (with title)</label><input id="e_n"></div><div><label>Designation</label><input id="e_r"></div></div><label>About</label><textarea id="e_d" rows="2"></textarea><label>Photo (optional)</label><input id="e_p" type="file" accept="image/*"><p style="margin-top:12px"><button class="btn" id="ea">Add Expert</button> <span id="em" class="ok"></span></p></div><div id="el" style="margin-top:10px"></div>
+<h3 style="margin:28px 0 8px">Clinic Settings</h3><div class="card"><div class="row"><div><label>Fee (₹)</label><input id="s_fee"></div><div><label>UPI ID</label><input id="s_upi"></div></div>
+<div class="row"><div><label>Phone (shown in top bar)</label><input id="s_phone"></div><div><label>WhatsApp (with 91)</label><input id="s_wa"></div></div>
+<div class="row"><div><label>Email (shown in top bar)</label><input id="s_email"></div><div><label>Timings</label><input id="s_hours"></div></div><label>Address</label><input id="s_addr">
+<p style="margin-top:14px"><button class="btn" id="ss">Save Settings</button> <span id="sm2" class="ok"></span></p></div></div></div></section>
+
+<div id="ov"><div><h3 id="ovt"></h3><div class="bar"><i id="ovb"></i></div></div></div>
+<script>
+const CFG={API:"https://script.google.com/macros/s/AKfycbwrL0pHp5tb0A6Mdd052E8zhq_6ysj4MrmJn_QW-T0NVUiKNFN_W2BS_yuUfvGWo4do/exec",ADMIN_PASS:"cgprc@123"}; // paste Apps Script /exec URL in API for live multi-device mode
+const WS={wk:["03:00 PM - 03:45 PM","04:00 PM - 04:45 PM","05:00 PM - 05:45 PM","06:00 PM - 06:45 PM","07:00 PM - 07:45 PM","08:00 PM - 08:45 PM"],sat:["01:00 PM - 01:45 PM","02:00 PM - 02:45 PM","03:00 PM - 03:45 PM","04:00 PM - 04:45 PM","05:00 PM - 05:45 PM"],sun:["09:00 AM - 09:45 AM","10:00 AM - 10:45 AM","11:00 AM - 11:45 AM"]};
+const dayslots=d=>{const g=new Date(d+"T00:00:00").getDay();return g==0?WS.sun:g==6?WS.sat:WS.wk};
+const mins=x=>{const m=x.match(/(\d+):(\d+) (AM|PM)/);return(m[1]%12+(m[3]=="PM"?12:0))*60+ +m[2]};
+const DEFEX={id:"d1",name:"Dr. Dhananjay Tiwari, Ph.D.",role:"Clinical Psychologist",desc:"Specialises in anxiety, depression, relationship concerns and stress management.",photo:"doctor.jpeg"};
+const PH="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="170" height="200"><rect fill="#dbeafe" width="170" height="200"/><text x="85" y="120" font-size="70" text-anchor="middle">🩺</text></svg>');
+const DEF={fee:"500",upi:"9471497422@ptsbi",payee:"CGPRC",phone:"",wa:"",email:"",hours:"Mon-Fri: 3:00 PM - 8:45 PM | Sat: 1:00 PM - 5:45 PM | Sun: 9:00 AM - 11:45 AM",addr:"Ara, Bihar"};
+const T={en:{admin:"Admin",n_home:"Home",n_about:"About Us",n_serv:"Services",n_exp:"Our Experts",n_book:"Book Appointment",n_upd:"Updates",n_faq:"FAQ",n_con:"Contact Us",
+h_tag:"CGPRC · Mental Wellness Clinic",h_h1:"Healing begins when you feel heard.",h_p:"Confidential, evidence-based counselling and psychotherapy with Dr. Dhananjay Tiwari, Clinical Psychologist — in clinic and online.",h_book:"Book an Appointment",h_track:"Track Booking",bd1:"🛡 100% Confidential",bd2:"💬 Hindi & English",
+s1:"Confidential",s2b:"Online + Clinic",s2:"Sessions",s3b:"1-Click",s3:"Booking",
+a_t:"About Us",a_s:"A safe, non-judgemental space for your mind.",a_p1:"CGPRC is a mental wellness clinic offering professional psychological care for children, teens, adults and families. Every plan is personalised and every session is private.",a_p2:"Our approach combines Cognitive Behavioural Therapy, mindfulness and supportive counselling, so you build skills that last beyond the session room.",
+sv_t:"Services",sv_s:"Support for what you are going through.",sv1t:"Individual Counselling",sv1d:"One-to-one therapy for stress, low mood, trauma and self-esteem.",sv2t:"Anxiety & Depression",sv2d:"CBT-based treatment plans with practical tools for daily life.",sv3t:"Child & Teen Support",sv3d:"Learning, behaviour, exam stress and emotional development.",sv4t:"Couple & Family Therapy",sv4d:"Better communication and healthier relationships.",sv5t:"Career Counselling",sv5d:"Clarity on goals, burnout and decisions.",sv6t:"Online Session",sv6d:"Secure video consultations from anywhere.",
+ex_t:"Our Experts",ex_s:"Qualified professionals you can trust.",ex_n:"Dr. Dhananjay Tiwari, Ph.D.",ex_r:"Clinical Psychologist",ex_d:"Specialises in anxiety, depression, relationship concerns and stress management. Sessions available in Hindi and English.",ex_b:"Book with this expert",
+st_t:"How Booking Works",stp1:"Fill details",stp1d:"Choose service, date and time slot.",stp2:"Pay via UPI",stp2d:"Scan the QR and note the transaction number.",stp3:"Get confirmed",stp3d:"Admin verifies and approves your booking.",
+b_t:"Book an Appointment",b_s:"Fill details → pay via UPI → enter transaction number. Your booking is confirmed only after admin approval.",l_name:"Full name *",l_mob:"Mobile (WhatsApp) *",l_age:"Age *",l_serv:"Service *",l_date:"Date *",l_slot:"Time slot *",l_con:"Your concern (optional)",b_next:"Continue to Payment →",
+p_s1:"<b>Step 1:</b> Scan the QR with any UPI app and pay",p_upi:"UPI ID:",p_copy:"Copy",p_copied:"Copied",p_app:"Pay with UPI app (mobile)",p_utr:"<b>Step 2:</b> Transaction / UTR number * (12 digits)",p_err:"Transaction number must be 12 digits",
+p_note:"After you submit, we verify the payment. The booking turns <b>Confirmed</b> once the admin approves it. Fake or reused transaction numbers are rejected.",p_back:"← Back",p_sub:"Submit Booking",
+v1:"Checking transaction number…",v2:"Matching payment amount…",v3:"Sending to clinic for approval…",ok_t:"Payment submitted ✔",ok_id:"Booking ID:",ok_p:"Your booking will be <b>confirmed after admin approval</b>. Save your Booking ID and track status below.",ok_btn:"Track Booking",
+t_t:"Track Your Booking",t_s:"Enter your Booking ID or mobile number.",t_ph:"Booking ID / Mobile",t_btn:"Check Status",t_none:"No booking found.",t_cf:"Your appointment is confirmed.",t_rj:"Payment could not be verified. Please contact the clinic.",t_pd:"Awaiting admin approval.",
+"st_Pending Verification":"Pending Verification",st_Confirmed:"Confirmed",st_Rejected:"Rejected",
+u_t:"Updates / Notice",u_s:"Latest announcements from the clinic.",u_none:"No new notices.",
+f_t:"FAQ",f_s:"Common questions answered.",q1:"Is my information confidential?",a1:"Yes. Everything you share is private and handled with professional ethics.",q2:"How does booking work?",a2:"Fill the form, pay by UPI, and enter the transaction number. Once the admin approves, your booking is confirmed.",q3:"How long does approval take?",a3:"Usually within a few hours during clinic hours. Check status in \"Track Your Booking\".",q4:"Can I take sessions online?",a4:"Yes, choose \"Online Session\" and the link will be shared on WhatsApp after approval.",q5:"What if my booking is rejected?",a5:"It usually means the payment could not be verified. Contact the clinic with your payment screenshot.",
+c_t:"Contact Us",c_addr:"Address",c_map:"View on map",c_time:"Timings",c_reach:"Reach us",c_call:"Call:",c_wa:"WhatsApp",c_soon:"Contact details coming soon.",ft:"All rights reserved.",bk:"(booked)",ps:"(time passed)",sl_t:"Available Slots",l_exp:"Choose expert *",d_wk:"Mon - Fri",d_sat:"Saturday",d_sun:"Sunday"},
+hi:{admin:"एडमिन",n_home:"होम",n_about:"हमारे बारे में",n_serv:"सेवाएँ",n_exp:"हमारे विशेषज्ञ",n_book:"अपॉइंटमेंट बुक करें",n_upd:"अपडेट्स",n_faq:"सामान्य प्रश्न",n_con:"संपर्क करें",
+h_tag:"CGPRC · मानसिक स्वास्थ्य क्लिनिक",h_h1:"जब आपकी बात सुनी जाती है, तभी उपचार शुरू होता है।",h_p:"डॉ. धनंजय तिवारी, क्लिनिकल साइकोलॉजिस्ट के साथ गोपनीय, प्रमाण-आधारित काउंसलिंग और साइकोथेरेपी — क्लिनिक में और ऑनलाइन।",h_book:"अपॉइंटमेंट बुक करें",h_track:"बुकिंग ट्रैक करें",bd1:"🛡 100% गोपनीय",bd2:"💬 हिंदी व अंग्रेज़ी",
+s1:"गोपनीय",s2b:"क्लिनिक + ऑनलाइन",s2:"सेशन",s3b:"1-क्लिक",s3:"बुकिंग",
+a_t:"हमारे बारे में",a_s:"आपके मन के लिए एक सुरक्षित, निष्पक्ष स्थान।",a_p1:"CGPRC एक मानसिक स्वास्थ्य क्लिनिक है जो बच्चों, किशोरों, वयस्कों और परिवारों को पेशेवर मनोवैज्ञानिक देखभाल देता है। हर योजना व्यक्तिगत होती है और हर सेशन निजी रहता है।",a_p2:"हम कॉग्निटिव बिहेवियरल थेरेपी, माइंडफुलनेस और सपोर्टिव काउंसलिंग को मिलाकर चलते हैं, ताकि आप ऐसे कौशल सीखें जो सेशन के बाद भी काम आएँ।",
+sv_t:"सेवाएँ",sv_s:"आप जिन परेशानियों से गुज़र रहे हैं, उनके लिए सहयोग।",sv1t:"व्यक्तिगत काउंसलिंग",sv1d:"तनाव, उदासी, ट्रॉमा और आत्म-सम्मान के लिए एक-से-एक थेरेपी।",sv2t:"चिंता और अवसाद",sv2d:"CBT आधारित उपचार योजना और रोज़मर्रा के व्यावहारिक उपाय।",sv3t:"बच्चों व किशोरों की सहायता",sv3d:"पढ़ाई, व्यवहार, परीक्षा तनाव और भावनात्मक विकास।",sv4t:"दंपत्ति व पारिवारिक थेरेपी",sv4d:"बेहतर संवाद और स्वस्थ रिश्ते।",sv5t:"करियर काउंसलिंग",sv5d:"लक्ष्यों, बर्नआउट और निर्णयों में स्पष्टता।",sv6t:"ऑनलाइन सेशन",sv6d:"कहीं से भी सुरक्षित वीडियो परामर्श।",
+ex_t:"हमारे विशेषज्ञ",ex_s:"योग्य पेशेवर, जिन पर आप भरोसा कर सकें।",ex_n:"डॉ. धनंजय तिवारी, पीएच.डी.",ex_r:"क्लिनिकल साइकोलॉजिस्ट",ex_d:"चिंता, अवसाद, रिश्तों की समस्याओं और तनाव प्रबंधन में विशेषज्ञता। सेशन हिंदी और अंग्रेज़ी में उपलब्ध।",ex_b:"इस विशेषज्ञ से बुक करें",
+st_t:"बुकिंग कैसे काम करती है",stp1:"विवरण भरें",stp1d:"सेवा, तारीख और समय चुनें।",stp2:"UPI से भुगतान करें",stp2d:"QR स्कैन करें और ट्रांज़ैक्शन नंबर नोट करें।",stp3:"बुकिंग कन्फ़र्म पाएँ",stp3d:"एडमिन जाँचकर आपकी बुकिंग मंज़ूर करता है।",
+b_t:"अपॉइंटमेंट बुक करें",b_s:"विवरण भरें → UPI से भुगतान करें → ट्रांज़ैक्शन नंबर डालें। एडमिन की मंज़ूरी के बाद ही बुकिंग कन्फ़र्म होगी।",l_name:"पूरा नाम *",l_mob:"मोबाइल (WhatsApp) *",l_age:"आयु *",l_serv:"सेवा *",l_date:"तारीख *",l_slot:"समय स्लॉट *",l_con:"आपकी समस्या (वैकल्पिक)",b_next:"भुगतान के लिए आगे बढ़ें →",
+p_s1:"<b>स्टेप 1:</b> किसी भी UPI ऐप से QR स्कैन करें और भुगतान करें",p_upi:"UPI आईडी:",p_copy:"कॉपी",p_copied:"कॉपी हो गया",p_app:"UPI ऐप से भुगतान करें (मोबाइल)",p_utr:"<b>स्टेप 2:</b> ट्रांज़ैक्शन / UTR नंबर * (12 अंक)",p_err:"ट्रांज़ैक्शन नंबर 12 अंकों का होना चाहिए",
+p_note:"सबमिट करने के बाद हम भुगतान की जाँच करते हैं। एडमिन के मंज़ूर करने पर बुकिंग <b>कन्फ़र्म</b> होगी। नकली या दोबारा उपयोग हुए ट्रांज़ैक्शन नंबर अस्वीकार किए जाते हैं।",p_back:"← वापस",p_sub:"बुकिंग सबमिट करें",
+v1:"ट्रांज़ैक्शन नंबर जाँचा जा रहा है…",v2:"भुगतान राशि मिलाई जा रही है…",v3:"मंज़ूरी के लिए क्लिनिक को भेजा जा रहा है…",ok_t:"भुगतान सबमिट हो गया ✔",ok_id:"बुकिंग आईडी:",ok_p:"आपकी बुकिंग <b>एडमिन की मंज़ूरी के बाद कन्फ़र्म</b> होगी। बुकिंग आईडी सहेज लें और नीचे स्टेटस ट्रैक करें।",ok_btn:"बुकिंग ट्रैक करें",
+t_t:"अपनी बुकिंग ट्रैक करें",t_s:"बुकिंग आईडी या मोबाइल नंबर डालें।",t_ph:"बुकिंग आईडी / मोबाइल",t_btn:"स्टेटस देखें",t_none:"कोई बुकिंग नहीं मिली।",t_cf:"आपकी अपॉइंटमेंट कन्फ़र्म है।",t_rj:"भुगतान सत्यापित नहीं हो सका। कृपया क्लिनिक से संपर्क करें।",t_pd:"एडमिन की मंज़ूरी का इंतज़ार है।",
+"st_Pending Verification":"सत्यापन लंबित",st_Confirmed:"कन्फ़र्म",st_Rejected:"अस्वीकृत",
+u_t:"अपडेट्स / सूचनाएँ",u_s:"क्लिनिक की ताज़ा घोषणाएँ।",u_none:"कोई नई सूचना नहीं।",
+f_t:"सामान्य प्रश्न",f_s:"अक्सर पूछे जाने वाले सवालों के जवाब।",q1:"क्या मेरी जानकारी गोपनीय है?",a1:"जी हाँ। आप जो भी साझा करते हैं वह निजी रहता है और पेशेवर नैतिकता के साथ संभाला जाता है।",q2:"बुकिंग कैसे होती है?",a2:"फ़ॉर्म भरें, UPI से भुगतान करें और ट्रांज़ैक्शन नंबर डालें। एडमिन की मंज़ूरी के बाद आपकी बुकिंग कन्फ़र्म हो जाती है।",q3:"मंज़ूरी में कितना समय लगता है?",a3:"आमतौर पर क्लिनिक के समय में कुछ घंटों के भीतर। \"अपनी बुकिंग ट्रैक करें\" में स्टेटस देखें।",q4:"क्या ऑनलाइन सेशन ले सकते हैं?",a4:"जी हाँ, \"ऑनलाइन सेशन\" चुनें; मंज़ूरी के बाद लिंक WhatsApp पर भेजा जाएगा।",q5:"बुकिंग अस्वीकृत हो जाए तो?",a5:"आमतौर पर इसका मतलब है कि भुगतान सत्यापित नहीं हो सका। अपने पेमेंट स्क्रीनशॉट के साथ क्लिनिक से संपर्क करें।",
+c_t:"संपर्क करें",c_addr:"पता",c_map:"नक्शे पर देखें",c_time:"समय",c_reach:"संपर्क",c_call:"फ़ोन:",c_wa:"WhatsApp",c_soon:"संपर्क विवरण जल्द उपलब्ध होंगे।",ft:"सर्वाधिकार सुरक्षित।",bk:"(बुक)",ps:"(समय बीत गया)",sl_t:"उपलब्ध स्लॉट",l_exp:"विशेषज्ञ चुनें *",d_wk:"सोम - शुक्र",d_sat:"शनिवार",d_sun:"रविवार"}};
+let L=localStorage.getItem("cl")||"en";
+const $=i=>document.getElementById(i),E=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])),tr=k=>T[L][k]??T.en[k]??k;
+let S={...DEF},PW="",D={},TRS=null,NS=[],EX=[DEFEX];
+function ld(){let d;try{d=JSON.parse(localStorage.getItem("cgprc"))}catch(e){}d=d||{b:[],n:[],s:{}};if(!d.e)d.e=[DEFEX];return d}
+function run(a,p){
+ if(CFG.API)return fetch(CFG.API,{method:"POST",body:JSON.stringify({a,p})}).then(r=>r.json());
+ const d=ld(),sv=()=>localStorage.setItem("cgprc",JSON.stringify(d)),adm=()=>{if(p.pw!==CFG.ADMIN_PASS)throw"Wrong password"};
+ if(a=="pub")return{n:d.n,s:d.s,e:d.e};
+ if(a=="slots")return d.b.filter(x=>x.date==p.date&&(x.expert||p.expert)==p.expert&&x.st!="Rejected").map(x=>x.slot);
+ if(a=="add"){if(d.b.some(x=>x.utr==p.utr))throw"This transaction number is already used";
+  if(d.b.some(x=>x.date==p.date&&x.slot==p.slot&&(x.expert||p.expert)==p.expert&&x.st!="Rejected"))throw"This slot was just taken, choose another";
+  const id="CG"+Date.now().toString(36).toUpperCase().slice(-6);d.b.push({...p,id,st:"Pending Verification",ts:new Date().toISOString()});sv();return{id}}
+ if(a=="track"){const q=String(p.q).trim().toUpperCase();return d.b.filter(x=>x.id==q||x.mobile==q)}
+ if(a=="login"){adm();return{ok:1}}
+ if(a=="list"){adm();return d.b}
+ if(a=="status"){adm();d.b.find(x=>x.id==p.id).st=p.st;sv();return{ok:1}}
+ if(a=="nadd"){adm();d.n.unshift({id:Date.now(),text:p.text});sv();return{ok:1}}
+ if(a=="ndel"){adm();d.n=d.n.filter(x=>x.id!=p.id);sv();return{ok:1}}
+ if(a=="sset"){adm();d.s=p.s;sv();return{ok:1}}
+ if(a=="eadd"){adm();d.e.push({id:"e"+Date.now(),...p.e});sv();return{ok:1}}
+ if(a=="edel"){adm();d.e=d.e.filter(x=>x.id!=p.id);sv();return{ok:1}}
+}
+async function api(a,p={}){try{const r=await run(a,p);return r&&r.err?{err:r.err}:{d:r}}catch(e){return{err:String(e)}}}
+// language
+function ap(){document.documentElement.lang=L;
+ document.querySelectorAll("[data-t]").forEach(e=>e.innerHTML=tr(e.dataset.t));
+ document.querySelectorAll("[data-p]").forEach(e=>e.placeholder=tr(e.dataset.p));
+ $("l_en").classList.toggle("on",L=="en");$("l_hi").classList.toggle("on",L=="hi");
+ rc();rn();rex();ravl();drawTrack();slots();if($("p2").classList.contains("hide")==false)$("cp").textContent=tr("p_copy")}
+function setL(l){L=l;localStorage.setItem("cl",l);ap()}
+$("l_en").onclick=()=>setL("en");$("l_hi").onclick=()=>setL("hi");
+function rc(){$("tem").innerHTML=S.email?`<a href="mailto:${E(S.email)}">${E(S.email)}</a>`:"info@yourclinic.com";
+ $("tph").innerHTML=S.phone?`<a href="tel:${E(S.phone)}">${E(S.phone)}</a>`:"+91 XXXXX XXXXX";
+ $("ct").innerHTML=`<div class="card"><div class="ic">📍</div><h3>${tr("c_addr")}</h3>${E(S.addr)}<br><a href="https://maps.google.com/?q=${encodeURIComponent(S.addr)}" target="_blank" rel="noopener">${tr("c_map")}</a></div>
+ <div class="card"><div class="ic">🕘</div><h3>${tr("c_time")}</h3>${E(S.hours)}</div>
+ <div class="card"><div class="ic">📞</div><h3>${tr("c_reach")}</h3>${S.phone?`${tr("c_call")} <a href="tel:${E(S.phone)}">${E(S.phone)}</a><br>`:""}${S.wa?`<a href="https://wa.me/${E(S.wa)}" target="_blank" rel="noopener">${tr("c_wa")}</a><br>`:""}${S.email?`<a href="mailto:${E(S.email)}">${E(S.email)}</a>`:""}${!S.phone&&!S.wa&&!S.email?tr("c_soon"):""}</div>`}
+function rn(){$("nl").innerHTML=NS.length?NS.map(n=>`<div class="ni">${E(n.text)}</div>`).join(""):`<p class="sub">${tr("u_none")}</p>`}
+async function load(){const r=await api("pub");if(r.d){S={...DEF,...r.d.s};NS=r.d.n||[];EX=Array.isArray(r.d.e)&&r.d.e.length?r.d.e:[DEFEX]}rc();rn();rex();slots()}
+$("yr").textContent=new Date().getFullYear();
+$("mb").onclick=()=>$("nv").classList.toggle("on");$("nv").onclick=()=>$("nv").classList.remove("on");
+// booking
+const today=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);$("dt").min=today;$("dt").value=today;
+async function slots(){const v=$("sl").value,d=$("dt").value;if(!d)return;const r=await api("slots",{date:d,expert:$("ex").value}),t=r.d||[],n=new Date(),nm=n.getHours()*60+n.getMinutes(),ds=dayslots(d);
+ $("sl").innerHTML=ds.map(x=>{const bk=t.includes(x),ps=d==today&&mins(x)<=nm;return`<option value="${x}" ${bk||ps?"disabled":""}>${x}${bk?" "+tr("bk"):ps?" "+tr("ps"):""}</option>`}).join("");
+ if(v&&ds.includes(v)&&!t.includes(v))$("sl").value=v;
+ const o=$("sl").selectedOptions[0];if(o&&o.disabled){const f=[...$("sl").options].find(z=>!z.disabled);if(f)$("sl").value=f.value}}
+$("dt").onchange=slots;$("ex").onchange=slots;
+function ravl(){$("avl").innerHTML=[["d_wk","wk"],["d_sat","sat"],["d_sun","sun"]].map(x=>`<p style="margin-top:6px"><b>${tr(x[0])}:</b> <span style="font-size:13px;color:var(--m)">${WS[x[1]].join(" · ")}</span></p>`).join("")}
+function rex(){const v=$("ex").value;$("exl").innerHTML=EX.map(x=>{const d=x.id=="d1";return`<div class="card ex"><img src="${E(x.photo||PH)}" alt=""><div><h3 style="font-size:20px">${E(d?tr("ex_n"):x.name)}</h3><p style="color:var(--a);font-weight:700">${E(d?tr("ex_r"):x.role)}</p><p style="margin-top:8px">${E(d?tr("ex_d"):x.desc)}</p><p style="margin-top:14px"><button class="btn s" onclick="bkx('${E(x.id)}')">${tr("ex_b")}</button></p></div></div>`}).join("");
+ $("ex").innerHTML=EX.map(x=>`<option value="${E(x.name)}">${E(x.id=="d1"?tr("ex_n"):x.name)}</option>`).join("");
+ if(v&&EX.some(x=>x.name==v))$("ex").value=v;$("exw").classList.toggle("hide",EX.length<2)}
+function bkx(id){const x=EX.find(z=>z.id==id);if(x)$("ex").value=x.name;slots();$("book").scrollIntoView()}
+$("f1").onsubmit=e=>{e.preventDefault();
+ D={name:$("nm").value.trim(),mobile:$("mo").value.trim(),age:$("ag").value,service:$("sv").value,date:$("dt").value,slot:$("sl").value,expert:$("ex").value,concern:$("cn").value.trim()};
+ $("sm").textContent=`${$("sv").selectedOptions[0].textContent} · ${D.date} · ${D.slot}${EX.length>1?" · "+$("ex").selectedOptions[0].textContent:""}`;$("am").textContent="₹"+S.fee;$("ui").textContent=S.upi;
+ $("upl").href=`upi://pay?pa=${S.upi}&pn=${encodeURIComponent(S.payee)}&am=${S.fee}&cu=INR&tn=CGPRC%20Appointment`;
+ $("f1").classList.add("hide");$("p2").classList.remove("hide");$("p2").scrollIntoView()};
+$("bk").onclick=()=>{$("p2").classList.add("hide");$("f1").classList.remove("hide")};
+$("cp").onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(S.upi);$("cp").textContent=tr("p_copied")};
+$("ut").oninput=()=>{const v=$("ut").value=$("ut").value.replace(/\D/g,"");$("sb").disabled=v.length!=12;$("um").textContent=v&&v.length!=12?tr("p_err"):""};
+$("sb").onclick=async()=>{
+ $("ov").style.display="flex";$("ovb").style.width="0";setTimeout(()=>$("ovb").style.width="100%",50);
+ let i=0;const st=()=>$("ovt").textContent=tr(["v1","v2","v3"][i%3]);st();const iv=setInterval(()=>{i++;st()},1800);
+ const [r]=await Promise.all([api("add",{...D,utr:$("ut").value}),new Promise(z=>setTimeout(z,5500))]);
+ clearInterval(iv);$("ov").style.display="none";
+ if(r.err){$("um").textContent=r.err;return}
+ $("p2").classList.add("hide");$("ok").classList.remove("hide");
+ $("ok").innerHTML=`<div class="card" style="text-align:center"><h3>${tr("ok_t")}</h3><p style="margin:8px 0">${tr("ok_id")} <b style="font-size:22px">${E(r.d.id)}</b></p><span class="tag">${tr("st_Pending Verification")}</span>
+ <p style="margin-top:10px">${tr("ok_p")}</p><p style="margin-top:12px"><a class="btn" href="#track" onclick="$('tq').value='${E(r.d.id)}'">${tr("ok_btn")}</a></p></div>`};
+// tracker
+function drawTrack(){if(!TRS)return;$("tr").innerHTML=TRS.err?`<p class="er">${E(TRS.err)}</p>`:TRS.d.length?TRS.d.map(b=>`<div class="card" style="margin-bottom:10px"><b>${E(b.id)}</b> · ${E(b.name)} <span class="tag ${E(b.st)}">${tr("st_"+b.st)}</span><br>${E(b.service)} · ${E(b.date)} · ${E(b.slot)}${b.st=="Confirmed"?`<p class="ok">${tr("t_cf")}</p>`:b.st=="Rejected"?`<p class="er">${tr("t_rj")}</p>`:`<p>${tr("t_pd")}</p>`}</div>`).join(""):`<p class="er">${tr("t_none")}</p>`}
+$("tb").onclick=async()=>{const q=$("tq").value.trim();if(!q)return;TRS=await api("track",{q});drawTrack()};
+// admin (English only)
+function route(){const a=location.hash=="#admin";$("admin").classList.toggle("hide",!a);document.querySelectorAll("section:not(#admin),.band").forEach(s=>s.classList.toggle("hide",a));if(a)scrollTo(0,0)}
+addEventListener("hashchange",route);route();
+$("lb").onclick=async()=>{const r=await api("login",{pw:$("ap").value});if(r.err){$("le").textContent=r.err;return}PW=$("ap").value;$("lg").classList.add("hide");$("db").classList.remove("hide");fill();refresh()};
+$("lo").onclick=()=>{PW="";$("db").classList.add("hide");$("lg").classList.remove("hide");$("ap").value=""};
+let B=[];
+async function refresh(){if(!PW)return;const r=await api("list",{pw:PW});if(r.err)return;B=r.d.slice().reverse();draw();
+ const n=await api("pub");if(n.d.e){EX=n.d.e.length?n.d.e:[DEFEX];rex();rel()}$("nm2").innerHTML=(n.d.n||[]).map(x=>`<div class="ni">${E(x.text)} <button class="btn s r" onclick="nd('${E(x.id)}')">Delete</button></div>`).join("")}
+function draw(){const f=$("fl").value,c=s=>B.filter(b=>b.st==s).length;
+ $("st").innerHTML=[["Total",B.length],["Pending",c("Pending Verification")],["Confirmed",c("Confirmed")],["Rejected",c("Rejected")]].map(x=>`<div class="card"><b style="font-size:28px;color:var(--p)">${x[1]}</b><br>${x[0]}</div>`).join("");
+ $("tbd").innerHTML=B.filter(b=>!f||b.st==f).map(b=>`<tr><td><b>${E(b.id)}</b></td><td>${E(b.name)}<br>${E(b.mobile)} · ${E(b.age)}y</td><td>${E(b.service)}<br>${b.expert?E(b.expert)+"<br>":""}${E(b.date)}<br>${E(b.slot)}</td><td>${E(b.utr)}</td><td><span class="tag ${E(b.st)}">${E(b.st)}</span></td><td>
+ <button class="btn s g" onclick="stt('${E(b.id)}','Confirmed')">Approve</button> <button class="btn s r" onclick="stt('${E(b.id)}','Rejected')">Reject</button> <a class="btn s o" target="_blank" rel="noopener" href="https://wa.me/91${E(b.mobile)}?text=${encodeURIComponent("Hello "+b.name+", your CGPRC booking "+b.id+" is "+b.st+" for "+b.date+", "+b.slot+".")}">WhatsApp</a></td></tr>`).join("")||"<tr><td colspan=6>No bookings</td></tr>"}
+async function stt(id,st){await api("status",{pw:PW,id,st});refresh()}
+async function nd(id){await api("ndel",{pw:PW,id});refresh();load()}
+$("fl").onchange=draw;$("rf").onclick=refresh;setInterval(refresh,20000);
+$("na").onclick=async()=>{const t=$("nt").value.trim();if(!t)return;await api("nadd",{pw:PW,text:t});$("nt").value="";refresh();load()};
+function rel(){$("el").innerHTML=EX.map(x=>`<div class="ni">${E(x.name)} — ${E(x.role)} <button class="btn s r" onclick="xd('${E(x.id)}')">Remove</button></div>`).join("")}
+async function xd(id){if(EX.length<2){$("em").className="er";$("em").textContent="Keep at least one expert.";return}if(!confirm("Remove this expert?"))return;await api("edel",{pw:PW,id});refresh();load()}
+function cmp(f){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const w=320,h=Math.round(i.height*w/i.width),c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);let q=.7,o=c.toDataURL("image/jpeg",q);while(o.length>45000&&q>.3){q-=.1;o=c.toDataURL("image/jpeg",q)}res(o)};i.src=r.result};r.readAsDataURL(f)})}
+$("ea").onclick=async()=>{const n=$("e_n").value.trim();if(!n){$("em").className="er";$("em").textContent="Name is required.";return}
+ const f=$("e_p").files[0],photo=f?await cmp(f):"";const r=await api("eadd",{pw:PW,e:{name:n,role:$("e_r").value.trim(),desc:$("e_d").value.trim(),photo}});
+ if(r.err){$("em").className="er";$("em").textContent=r.err;return}["e_n","e_r","e_d","e_p"].forEach(k=>$(k).value="");$("em").className="ok";$("em").textContent="Added ✔";refresh();load()};
+const SK=["fee","upi","phone","wa","email","hours","addr"];
+function fill(){SK.forEach(k=>$("s_"+k).value=S[k]||"")}
+$("ss").onclick=async()=>{const s={};SK.forEach(k=>s[k]=$("s_"+k).value.trim());await api("sset",{pw:PW,s});$("sm2").textContent="Saved ✔";load()};
+ap();load();
+</script>
